@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+.yarn/
+.yarnrc
+.pnp.*
+package-lock.json
+yarn.lock
+yarn-error.log
+
+# Build outputs
+lib/
+dist/
+*.tsbuildinfo
+
+# React Native
+ios/Pods/
+ios/build/
+android/build/
+android/app/build/
+*.iml
+.gradle/
+local.properties
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+coverage/
+.jest/
+__tests__/__snapshots__/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Misc
+*.log
+*.tmp
+.cache/

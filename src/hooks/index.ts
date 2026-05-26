@@ -1,0 +1,1 @@
+export { useSwipeable } from './useSwipeable';
