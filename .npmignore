@@ -24,6 +24,11 @@ tsconfig.json
 # Example app (published separately if needed)
 example/
 
+# Assets - include screenshots and demo svg, but not videos in npm package
+assets/videos/
+assets/README.md
+!assets/demo.svg
+
 # Misc
 *.log
 .DS_Store

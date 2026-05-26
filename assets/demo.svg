@@ -1,0 +1,56 @@
+<svg viewBox="0 0 375 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="375" height="200" fill="#F5F5F5"/>
+  
+  <!-- Swipe Item Background -->
+  <rect x="0" y="50" width="375" height="80" fill="#4CAF50"/>
+  <text x="60" y="95" fill="white" font-size="14" font-family="Arial">Archive</text>
+  
+  <rect x="225" y="50" width="150" height="80" fill="#FF3B30"/>
+  <text x="285" y="95" fill="white" font-size="14" font-family="Arial">Delete</text>
+  
+  <!-- Animated Foreground Item -->
+  <g>
+    <rect x="0" y="50" width="375" height="80" fill="white" stroke="#E5E5E5" stroke-width="1">
+      <animate attributeName="x" 
+        values="0;-100;0;100;0" 
+        dur="3s" 
+        repeatCount="indefinite"
+        keyTimes="0;0.2;0.5;0.8;1"
+        calcMode="spline"
+        keySplines="0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1"/>
+    </rect>
+    <circle cx="30" cy="90" r="20" fill="#E0E0E0">
+      <animate attributeName="cx" 
+        values="30;-70;30;130;30" 
+        dur="3s" 
+        repeatCount="indefinite"
+        keyTimes="0;0.2;0.5;0.8;1"
+        calcMode="spline"
+        keySplines="0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1"/>
+    </circle>
+    <rect x="60" y="75" width="200" height="12" fill="#333" rx="2">
+      <animate attributeName="x" 
+        values="60;-40;60;160;60" 
+        dur="3s" 
+        repeatCount="indefinite"
+        keyTimes="0;0.2;0.5;0.8;1"
+        calcMode="spline"
+        keySplines="0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1"/>
+    </rect>
+    <rect x="60" y="95" width="150" height="10" fill="#999" rx="2">
+      <animate attributeName="x" 
+        values="60;-40;60;160;60" 
+        dur="3s" 
+        repeatCount="indefinite"
+        keyTimes="0;0.2;0.5;0.8;1"
+        calcMode="spline"
+        keySplines="0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1"/>
+    </rect>
+  </g>
+  
+  <!-- Instructions -->
+  <text x="187" y="180" text-anchor="middle" fill="#666" font-size="12" font-family="Arial">
+    🎬 Replace with actual video: See README.md recording guide
+  </text>
+</svg>

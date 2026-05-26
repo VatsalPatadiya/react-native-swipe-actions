@@ -43,3 +43,10 @@ __tests__/__snapshots__/
 *.log
 *.tmp
 .cache/
+
+# Assets - ignore videos but keep screenshots for README
+assets/videos/*.mp4
+assets/videos/*.mov
+assets/videos/*.gif
+*.mp4
+*.mov
