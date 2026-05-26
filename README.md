@@ -11,15 +11,6 @@ High-performance, fully customizable React Native swipeable list items with nati
 
 > **🎬 Full Video Demo:** [Watch on YouTube](https://youtube.com/your-video-link) *(Coming Soon)*
 
-### Screenshots
-
-| Left Swipe | Right Swipe | Both Swipes |
-|------------|-------------|-------------|
-| ![Left Swipe](assets/screenshots/left-swipe.png) | ![Right Swipe](assets/screenshots/right-swipe.png) | ![Both](assets/screenshots/both-swipes.png) |
-| *Archive & Read actions* | *Delete action* | *Full interaction* |
-
-> **Note:** Place your screenshots in `assets/screenshots/` folder and update the paths above.
-
 ## Features
 
 - **Native-like gestures** - Smooth physics-based animations using Reanimated 3
@@ -217,49 +208,6 @@ import { SwipeList } from 'react-native-fluid-swipe-list';
   renderItem={({ item }) => <View>...</View>}
   listProps={{ estimatedItemSize: 80 }}
 />
-```
-
-## 📸 Adding Screenshots & Videos
-
-To showcase your package with compelling visuals:
-
-### Recommended Assets Structure
-
-```
-assets/
-├── screenshots/
-│   ├── left-swipe.png       # Left swipe actions demo
-│   ├── right-swipe.png      # Right swipe actions demo
-│   ├── both-swipes.png      # Full interaction demo
-│   └── thumbnail.png        # Package thumbnail (1200x630)
-└── videos/
-    └── demo.mp4             # Short demo video (15-30 sec)
-```
-
-### Recording Tips
-
-**For Video:**
-- Use iOS Simulator or Android Emulator screen recording
-- Keep it short (15-30 seconds)
-- Show smooth 60 FPS animations
-- Demonstrate: open left → open right → close → scroll behavior
-- Upload to: YouTube, Vimeo, or GitHub releases
-
-**For Screenshots:**
-- Capture at high resolution (iPhone 14 Pro / Pixel 7)
-- Show light and dark mode if supported
-- Include RTL layout example
-- Recommended size: 1170x2532 (iPhone) or 1080x2400 (Android)
-
-### Quick Recording Commands
-
-```bash
-# iOS Simulator
-xcrun simctl io booted recordVideo demo.mp4
-
-# Android Emulator
-adb shell screenrecord /sdcard/demo.mp4
-adb pull /sdcard/demo.mp4
 ```
 
 ## License

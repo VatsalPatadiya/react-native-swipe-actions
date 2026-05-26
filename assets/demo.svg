@@ -3,11 +3,27 @@
   <rect width="375" height="200" fill="#F5F5F5"/>
   
   <!-- Swipe Item Background -->
-  <rect x="0" y="50" width="375" height="80" fill="#4CAF50"/>
-  <text x="60" y="95" fill="white" font-size="14" font-family="Arial">Archive</text>
+  <!-- Left actions (Archive - Green) -->
+  <rect x="0" y="50" width="80" height="80" fill="#4CAF50"/>
+  <!-- Archive Icon (Box with down arrow) centered -->
+  <g transform="translate(40, 90)">
+    <rect x="-12" y="-8" width="24" height="20" rx="2" fill="none" stroke="white" stroke-width="2"/>
+    <path d="M-6 -8 L-6 -12 L6 -12 L6 -8" fill="none" stroke="white" stroke-width="2"/>
+    <path d="M0 -2 L0 6 M-4 2 L0 6 L4 2" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
   
-  <rect x="225" y="50" width="150" height="80" fill="#FF3B30"/>
-  <text x="285" y="95" fill="white" font-size="14" font-family="Arial">Delete</text>
+  <!-- Right actions (Delete - Red) -->
+  <rect x="295" y="50" width="80" height="80" fill="#FF3B30"/>
+  <!-- Delete Icon (Trash can) centered -->
+  <g transform="translate(335, 90)">
+    <rect x="-10" y="-6" width="20" height="24" rx="2" fill="none" stroke="white" stroke-width="2"/>
+    <line x1="-6" y1="-6" x2="-6" y2="-12" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <line x1="6" y1="-6" x2="6" y2="-12" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <line x1="-14" y1="-12" x2="14" y2="-12" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <line x1="-4" y1="0" x2="-4" y2="12" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <line x1="0" y1="0" x2="0" y2="12" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <line x1="4" y1="0" x2="4" y2="12" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  </g>
   
   <!-- Animated Foreground Item -->
   <g>
@@ -51,6 +67,6 @@
   
   <!-- Instructions -->
   <text x="187" y="180" text-anchor="middle" fill="#666" font-size="12" font-family="Arial">
-    🎬 Replace with actual video: See README.md recording guide
+    🎬 Swipe left to delete, right to archive
   </text>
 </svg>
