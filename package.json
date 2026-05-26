@@ -1,6 +1,6 @@
 {
   "name": "react-native-fluid-swipe-list",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "High-performance, fully customizable React Native swipeable list items with native-feeling gestures and animations",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",

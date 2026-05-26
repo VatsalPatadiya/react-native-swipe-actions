@@ -9,8 +9,6 @@ High-performance, fully customizable React Native swipeable list items with nati
 
 ![Demo Animation](assets/demo.svg)
 
-> **🎬 Full Video Demo:** [Watch on YouTube](https://youtube.com/your-video-link) *(Coming Soon)*
-
 ## Features
 
 - **Native-like gestures** - Smooth physics-based animations using Reanimated 3
@@ -44,7 +42,7 @@ Make sure to follow the [Reanimated installation guide](https://docs.swmansion.c
 
 ```tsx
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, useColorScheme } from 'react-native';
 import { SwipeList } from 'react-native-fluid-swipe-list';
 
 const data = [
@@ -54,33 +52,57 @@ const data = [
 ];
 
 export default function App() {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
+  const colors = {
+    background: isDark ? '#121212' : '#F5F5F5',
+    item: isDark ? '#1E1E1E' : '#FFFFFF',
+    text: isDark ? '#FFFFFF' : '#333333',
+    border: isDark ? '#333333' : '#E5E5E5',
+  };
+
   return (
-    <SwipeList
-      data={data}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <View style={styles.item}>
-          <Text>{item.title}</Text>
-        </View>
-      )}
-      rightActions={(item) => [
-        {
-          id: 'delete',
-          label: 'Delete',
-          backgroundColor: '#FF3B30',
-          onPress: (item) => console.log('Delete', item),
-        },
-      ]}
-    />
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <SwipeList
+        data={data}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={[styles.item, { backgroundColor: colors.item, borderBottomColor: colors.border }]}>
+            <Text style={[styles.text, { color: colors.text }]}>{item.title}</Text>
+          </View>
+        )}
+        rightActions={(item) => [
+          {
+            id: 'delete',
+            label: 'Delete',
+            backgroundColor: isDark ? '#FF453A' : '#FF3B30',
+            onPress: (item) => console.log('Delete', item),
+          },
+        ]}
+        leftActions={(item) => [
+          {
+            id: 'archive',
+            label: 'Archive',
+            backgroundColor: isDark ? '#30D158' : '#34C759',
+            onPress: (item) => console.log('Archive', item),
+          },
+        ]}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   item: {
     padding: 20,
-    backgroundColor: 'white',
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E5E5',
+  },
+  text: {
+    fontSize: 16,
   },
 });
 ```
