@@ -9,5 +9,6 @@ export type {
   SwipeDirection,
   SwipeableRef,
   GestureState,
+  HapticType,
 } from './types';
 export { SWIPE_DEFAULTS, SWIPE_DIRECTIONS, GESTURE_CONFIG } from './constants';

@@ -5,7 +5,6 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
-  withTiming,
   runOnJS,
   interpolate,
   Extrapolation,
@@ -15,6 +14,7 @@ import type { SwipeableItemProps, SwipeableRef, SwipeAction } from '../types';
 import { SWIPE_DEFAULTS, GESTURE_CONFIG } from '../constants';
 import { useOptionalSwipeContext } from '../contexts/SwipeContext';
 import { SwipeActions } from './SwipeActions';
+import { triggerHaptic } from '../utils';
 
 const IS_RTL = I18nManager.isRTL;
 
@@ -32,7 +32,6 @@ export const SwipeableItem = memo(forwardRef<SwipeableRef, SwipeableItemInternal
     disableLeftSwipe = false,
     disableRightSwipe = false,
     swipeThreshold = SWIPE_DEFAULTS.THRESHOLD,
-    animationDuration = SWIPE_DEFAULTS.ANIMATION_DURATION,
     onSwipeOpen,
     onSwipeClose,
     onSwipeStart,
@@ -40,6 +39,8 @@ export const SwipeableItem = memo(forwardRef<SwipeableRef, SwipeableItemInternal
     closeOnPress = true,
     style,
     itemUniqueId,
+    enableHaptic = true,
+    hapticType = 'medium',
   },
   ref
 ) => {
@@ -51,39 +52,62 @@ export const SwipeableItem = memo(forwardRef<SwipeableRef, SwipeableItemInternal
   const isOpen = useSharedValue(false);
   const direction = useSharedValue<'left' | 'right' | null>(null);
   
-  const leftWidth = (leftActions?.length || 0) * SWIPE_DEFAULTS.ACTION_WIDTH;
-  const rightWidth = (rightActions?.length || 0) * SWIPE_DEFAULTS.ACTION_WIDTH;
+  const clampedLeftActions = leftActions?.slice(0, SWIPE_DEFAULTS.MAX_ACTIONS);
+  const clampedRightActions = rightActions?.slice(0, SWIPE_DEFAULTS.MAX_ACTIONS);
+
+  const leftWidth = (clampedLeftActions?.length || 0) * SWIPE_DEFAULTS.ACTION_WIDTH;
+  const rightWidth = (clampedRightActions?.length || 0) * SWIPE_DEFAULTS.ACTION_WIDTH;
   
   const effectiveDisableLeft = IS_RTL ? disableRightSwipe : disableLeftSwipe;
   const effectiveDisableRight = IS_RTL ? disableLeftSwipe : disableRightSwipe;
   
-  const effectiveLeftActions = IS_RTL ? rightActions : leftActions;
-  const effectiveRightActions = IS_RTL ? leftActions : rightActions;
+  const effectiveLeftActions = IS_RTL ? clampedRightActions : clampedLeftActions;
+  const effectiveRightActions = IS_RTL ? clampedLeftActions : clampedRightActions;
+
+  const triggerSwipeHaptic = useCallback(() => {
+    if (enableHaptic) {
+      triggerHaptic(hapticType);
+    }
+  }, [enableHaptic, hapticType]);
 
   const close = useCallback(() => {
-    translateX.value = withTiming(0, { duration: animationDuration }, () => {
+    translateX.value = withSpring(0, {
+      damping: SWIPE_DEFAULTS.SPRING_DAMPING,
+      stiffness: SWIPE_DEFAULTS.SPRING_STIFFNESS,
+      mass: SWIPE_DEFAULTS.SPRING_MASS,
+    }, () => {
       isOpen.value = false;
       direction.value = null;
     });
-  }, [translateX, animationDuration, isOpen, direction]);
+  }, [translateX, isOpen, direction]);
 
   const openLeft = useCallback(() => {
     if (effectiveDisableLeft || !effectiveLeftActions?.length) return;
     const targetX = leftWidth;
-    translateX.value = withTiming(targetX, { duration: animationDuration }, () => {
+    runOnJS(triggerSwipeHaptic)();
+    translateX.value = withSpring(targetX, {
+      damping: SWIPE_DEFAULTS.SPRING_DAMPING,
+      stiffness: SWIPE_DEFAULTS.SPRING_STIFFNESS,
+      mass: SWIPE_DEFAULTS.SPRING_MASS,
+    }, () => {
       isOpen.value = true;
       direction.value = 'left';
     });
-  }, [translateX, leftWidth, animationDuration, isOpen, direction, effectiveDisableLeft, effectiveLeftActions]);
+  }, [translateX, leftWidth, isOpen, direction, effectiveDisableLeft, effectiveLeftActions, triggerSwipeHaptic]);
 
   const openRight = useCallback(() => {
     if (effectiveDisableRight || !effectiveRightActions?.length) return;
     const targetX = -rightWidth;
-    translateX.value = withTiming(targetX, { duration: animationDuration }, () => {
+    runOnJS(triggerSwipeHaptic)();
+    translateX.value = withSpring(targetX, {
+      damping: SWIPE_DEFAULTS.SPRING_DAMPING,
+      stiffness: SWIPE_DEFAULTS.SPRING_STIFFNESS,
+      mass: SWIPE_DEFAULTS.SPRING_MASS,
+    }, () => {
       isOpen.value = true;
       direction.value = 'right';
     });
-  }, [translateX, rightWidth, animationDuration, isOpen, direction, effectiveDisableRight, effectiveRightActions]);
+  }, [translateX, rightWidth, isOpen, direction, effectiveDisableRight, effectiveRightActions, triggerSwipeHaptic]);
 
   useImperativeHandle(ref, () => ({
     close,
@@ -93,10 +117,9 @@ export const SwipeableItem = memo(forwardRef<SwipeableRef, SwipeableItemInternal
   }));
 
   useEffect(() => {
-    if (swipeContext) {
-      swipeContext.registerItem(itemUniqueId, close);
-      return () => swipeContext.unregisterItem(itemUniqueId);
-    }
+    if (!swipeContext) return;
+    swipeContext.registerItem(itemUniqueId, close);
+    return () => swipeContext.unregisterItem(itemUniqueId);
   }, [swipeContext, itemUniqueId, close]);
 
   useAnimatedReaction(
@@ -137,23 +160,28 @@ export const SwipeableItem = memo(forwardRef<SwipeableRef, SwipeableItemInternal
       runOnJS(handleSwipeStart)();
     })
     .onUpdate((event) => {
-      const newX = contextX.value + event.translationX;
-      
+      const rawTranslation = event.translationX * SWIPE_DEFAULTS.DRAG_RESISTANCE;
+      const newX = contextX.value + rawTranslation;
+
       if (newX > 0 && (effectiveDisableLeft || !effectiveLeftActions?.length)) {
-        translateX.value = 0;
+        // Apply rubber band effect when swiping is disabled
+        translateX.value = newX * 0.15;
         return;
       }
       if (newX < 0 && (effectiveDisableRight || !effectiveRightActions?.length)) {
-        translateX.value = 0;
+        translateX.value = newX * 0.15;
         return;
       }
 
+      // WhatsApp-like overscroll with smooth resistance
       if (newX > leftWidth) {
         const overscroll = newX - leftWidth;
-        translateX.value = leftWidth + overscroll * SWIPE_DEFAULTS.OVERSCROLL_FRICTION;
+        const dampedOverscroll = overscroll * SWIPE_DEFAULTS.OVERSCROLL_FRICTION;
+        translateX.value = leftWidth + dampedOverscroll;
       } else if (newX < -rightWidth) {
         const overscroll = Math.abs(newX) - rightWidth;
-        translateX.value = -rightWidth - overscroll * SWIPE_DEFAULTS.OVERSCROLL_FRICTION;
+        const dampedOverscroll = overscroll * SWIPE_DEFAULTS.OVERSCROLL_FRICTION;
+        translateX.value = -rightWidth - dampedOverscroll;
       } else {
         translateX.value = newX;
       }
@@ -181,18 +209,29 @@ export const SwipeableItem = memo(forwardRef<SwipeableRef, SwipeableItemInternal
         velocity < -velocityThreshold
       );
 
+      const springConfig = {
+        damping: SWIPE_DEFAULTS.SPRING_DAMPING,
+        stiffness: SWIPE_DEFAULTS.SPRING_STIFFNESS,
+        mass: SWIPE_DEFAULTS.SPRING_MASS,
+        overshootClamping: false,
+        restDisplacementThreshold: 0.01,
+        restSpeedThreshold: 0.5,
+      };
+
       if (shouldOpenLeft) {
-        translateX.value = withSpring(leftWidth, { damping: 20, stiffness: 200 }, () => {
+        runOnJS(triggerSwipeHaptic)();
+        translateX.value = withSpring(leftWidth, springConfig, () => {
           isOpen.value = true;
           runOnJS(handleSwipeOpen)('left');
         });
       } else if (shouldOpenRight) {
-        translateX.value = withSpring(-rightWidth, { damping: 20, stiffness: 200 }, () => {
+        runOnJS(triggerSwipeHaptic)();
+        translateX.value = withSpring(-rightWidth, springConfig, () => {
           isOpen.value = true;
           runOnJS(handleSwipeOpen)('right');
         });
       } else {
-        translateX.value = withSpring(0, { damping: 20, stiffness: 200 }, () => {
+        translateX.value = withSpring(0, springConfig, () => {
           if (isOpen.value) {
             runOnJS(handleSwipeClose)();
           }

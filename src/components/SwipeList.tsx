@@ -35,6 +35,8 @@ const InnerSwipeListComponent = <T extends any>(
     style,
     contentContainerStyle,
     onScroll,
+    enableHaptic,
+    hapticType,
   }: InnerSwipeListProps<T>,
   ref: React.Ref<{ closeAll: () => void }>
 ) => {
@@ -106,6 +108,8 @@ const InnerSwipeListComponent = <T extends any>(
         onSwipeEnd={onSwipeEnd}
         closeOnPress={closeOnPress}
         itemUniqueId={itemId}
+        enableHaptic={enableHaptic}
+        hapticType={hapticType}
       />
     );
   }, [
@@ -123,6 +127,8 @@ const InnerSwipeListComponent = <T extends any>(
     closeOnPress,
     renderItem,
     getItemRef,
+    enableHaptic,
+    hapticType,
   ]);
 
   const List = ListComponent || AnimatedFlatList;

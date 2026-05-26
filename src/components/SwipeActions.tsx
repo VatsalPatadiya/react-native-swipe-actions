@@ -18,7 +18,7 @@ export const SwipeActions = memo(({ actions, direction, onActionPress }: SwipeAc
 
   return (
     <View style={[styles.container, direction === 'right' ? styles.rowReverse : styles.row]}>
-      {actions.map((action, index) => (
+      {actions.map((action) => (
         <TouchableOpacity
           key={action.id}
           style={[

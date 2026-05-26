@@ -14,6 +14,8 @@ export interface SwipeAction {
   textStyle?: TextStyle;
 }
 
+export type HapticType = 'light' | 'medium' | 'heavy' | 'selection' | 'none';
+
 export interface SwipeableItemProps<T = any> {
   item: T;
   index: number;
@@ -32,6 +34,8 @@ export interface SwipeableItemProps<T = any> {
   closeOnScroll?: boolean;
   style?: ViewStyle;
   itemId?: string | number;
+  enableHaptic?: boolean;
+  hapticType?: HapticType;
 }
 
 export interface SwipeListProps<T = any> {
@@ -56,6 +60,8 @@ export interface SwipeListProps<T = any> {
   contentContainerStyle?: ViewStyle;
   onScroll?: (event: any) => void;
   simultaneousHandlers?: React.RefObject<any> | React.RefObject<any>[];
+  enableHaptic?: boolean;
+  hapticType?: HapticType;
 }
 
 export interface SwipeContextValue {
