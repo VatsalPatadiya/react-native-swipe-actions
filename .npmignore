@@ -1,0 +1,35 @@
+# Source code (only compiled lib/ should be published)
+src/
+
+# Build tools
+.eslintrc.js
+.prettierrc.js
+babel.config.js
+jest.config.js
+metro.config.js
+tsconfig.json
+
+# Development files
+.github/
+.vscode/
+.idea/
+
+# Test files
+**/__tests__/
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+
+# Example app (published separately if needed)
+example/
+
+# Misc
+*.log
+.DS_Store
+.env
+.env.*
+coverage/
+.yarn/
+.yarnrc
+.pnp.*
